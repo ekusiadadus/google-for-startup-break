@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { Card, CardBody } from "@nextui-org/react";
 import {
   Button,
   Tooltip,
@@ -9,40 +8,24 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Select,
+  SelectItem,
+  Input,
+  Textarea,
 } from "@nextui-org/react";
-import { Select, SelectItem } from "@nextui-org/react";
 import Image from "next/image";
+import { initSeats } from "@/const/seats";
 
 const SeatingMap = () => {
-  const [seats, setSeats] = useState([
-    // 左側ラウンジエリア（スクリーン前）
-    { id: 1, x: 23, y: 61, status: "available", topic: "", language: "" },
-    { id: 2, x: 22, y: 56, status: "available", topic: "", language: "" },
-    { id: 3, x: 29, y: 58, status: "available", topic: "", language: "" },
-    { id: 4, x: 28, y: 54, status: "available", topic: "", language: "" },
-    // 左側2つ目
-    { id: 5, x: 33, y: 57, status: "available", topic: "", language: "" },
-    { id: 6, x: 32, y: 53, status: "available", topic: "", language: "" },
-    { id: 7, x: 40, y: 55, status: "available", topic: "", language: "" },
-    { id: 8, x: 38, y: 50, status: "available", topic: "", language: "" },
-
-    // 右側ラウンジエリア（スクリーン前）
-    { id: 9, x: 45, y: 53, status: "available", topic: "", language: "" },
-    { id: 10, x: 43, y: 48, status: "available", topic: "", language: "" },
-    { id: 11, x: 50, y: 52, status: "available", topic: "", language: "" },
-    { id: 12, x: 48, y: 47, status: "available", topic: "", language: "" },
-    // 右側ラウンジエリア（スクリーン前）
-    { id: 13, x: 60, y: 41, status: "available", topic: "", language: "" },
-    { id: 14, x: 63, y: 43, status: "available", topic: "", language: "" },
-    { id: 15, x: 66, y: 46, status: "available", topic: "", language: "" },
-
-    { id: 16, x: 62, y: 58, status: "available", topic: "", language: "" },
-    { id: 17, x: 43, y: 80, status: "available", topic: "", language: "" },
-    { id: 18, x: 68, y: 66, status: "available", topic: "", language: "" },
-  ]);
-
+  const [seats, setSeats] = useState(initSeats);
   const [selectedSeat, setSelectedSeat] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    user: "",
+    topic: "",
+    language: "",
+    message: "",
+  });
 
   const topics = [
     { value: "coffee", label: "コーヒー休憩" },
@@ -59,24 +42,62 @@ const SeatingMap = () => {
 
   const handleSeatClick = (seat) => {
     setSelectedSeat(seat);
+    setFormData({
+      user: seat.user || "",
+      topic: seat.topic || "",
+      language: seat.language || "",
+      message: seat.message || "",
+    });
     setIsModalOpen(true);
   };
 
-  const handleSeatUpdate = (topic, language) => {
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    // モーダルが完全に閉じた後にフォームをリセット
+    setTimeout(() => {
+      setFormData({
+        user: "",
+        topic: "",
+        language: "",
+        message: "",
+      });
+      setSelectedSeat(null);
+    }, 300);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Validation
+    if (!formData.user || !formData.topic || !formData.language) {
+      return;
+    }
+
     const updatedSeats = seats.map((seat) =>
       seat.id === selectedSeat.id
-        ? { ...seat, status: "occupied", topic, language }
+        ? {
+            ...seat,
+            status: "occupied",
+            ...formData,
+          }
         : seat
     );
+
     setSeats(updatedSeats);
-    setIsModalOpen(false);
+    handleModalClose();
+  };
+
+  const handleFormChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   return (
     <div className="relative w-full h-screen">
       <div className="absolute w-full h-full overflow-hidden">
         <div className="relative w-full h-full">
-          {/* 背景画像 */}
           <Image
             src="/google_for_startups.jpeg"
             alt="Google for Startups Space"
@@ -85,14 +106,17 @@ const SeatingMap = () => {
             className="opacity-90"
           />
 
-          {/* 座席オーバーレイ */}
           <div className="absolute inset-0">
             {seats.map((seat) => (
               <Tooltip
                 key={seat.id}
                 content={
                   seat.status === "occupied"
-                    ? `${seat.topic} (${seat.language})`
+                    ? `${seat.user}: ${
+                        topics.find((t) => t.value === seat.topic)?.label
+                      } (${
+                        languages.find((l) => l.value === seat.language)?.label
+                      })`
                     : "空席"
                 }
               >
@@ -117,38 +141,76 @@ const SeatingMap = () => {
         </div>
       </div>
 
-      {/* 座席設定モーダル */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        placement="center"
+        isDismissable={false}
+      >
         <ModalContent>
-          <ModalHeader>座席 {selectedSeat?.id} の設定</ModalHeader>
-          <ModalBody>
-            <Select
-              label="話したいトピック"
-              placeholder="トピックを選択してください"
-              className="mb-4"
-            >
-              {topics.map((topic) => (
-                <SelectItem key={topic.value} value={topic.value}>
-                  {topic.label}
-                </SelectItem>
-              ))}
-            </Select>
-            <Select label="希望言語" placeholder="言語を選択してください">
-              {languages.map((lang) => (
-                <SelectItem key={lang.value} value={lang.value}>
-                  {lang.label}
-                </SelectItem>
-              ))}
-            </Select>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="primary"
-              onPress={() => handleSeatUpdate("コーヒー休憩", "日本語")}
-            >
-              設定する
-            </Button>
-          </ModalFooter>
+          {(onClose) => (
+            <form onSubmit={handleSubmit}>
+              <ModalHeader>座席 {selectedSeat?.id} の設定</ModalHeader>
+              <ModalBody>
+                <div className="space-y-4">
+                  <Input
+                    value={formData.user}
+                    onChange={(e) => handleFormChange("user", e.target.value)}
+                    label="お名前"
+                    placeholder="お名前を入力してください"
+                    isRequired
+                  />
+
+                  <Select
+                    label="話したいトピック"
+                    placeholder="トピックを選択してください"
+                    selectedKeys={formData.topic ? [formData.topic] : []}
+                    onChange={(e) => handleFormChange("topic", e.target.value)}
+                    isRequired
+                  >
+                    {topics.map((topic) => (
+                      <SelectItem key={topic.value} value={topic.value}>
+                        {topic.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
+
+                  <Select
+                    label="希望言語"
+                    placeholder="言語を選択してください"
+                    selectedKeys={formData.language ? [formData.language] : []}
+                    onChange={(e) =>
+                      handleFormChange("language", e.target.value)
+                    }
+                    isRequired
+                  >
+                    {languages.map((lang) => (
+                      <SelectItem key={lang.value} value={lang.value}>
+                        {lang.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
+
+                  <Textarea
+                    value={formData.message}
+                    onChange={(e) =>
+                      handleFormChange("message", e.target.value)
+                    }
+                    label="メッセージ"
+                    placeholder="任意でメッセージを入力してください"
+                  />
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  キャンセル
+                </Button>
+                <Button color="primary" type="submit">
+                  設定する
+                </Button>
+              </ModalFooter>
+            </form>
+          )}
         </ModalContent>
       </Modal>
     </div>
