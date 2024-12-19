@@ -1,4 +1,6 @@
-export const initSeats = [
+import type { Seat } from "@/types/seat";
+
+export const initSeats: Seat[] = [
   {
     id: 1,
     x: 23,
@@ -6,7 +8,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -16,7 +18,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -26,7 +28,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -36,7 +38,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -46,7 +48,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -56,7 +58,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -66,7 +68,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -76,7 +78,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -86,7 +88,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -96,7 +98,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -106,7 +108,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -116,7 +118,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -126,7 +128,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -136,7 +138,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -146,7 +148,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -156,7 +158,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -166,7 +168,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
   {
@@ -176,7 +178,7 @@ export const initSeats = [
     status: "available",
     topic: "",
     language: "",
-    user: "",
+    username: "",
     message: "",
   },
 ];

@@ -1,4 +1,5 @@
 // components/SeatModal.tsx
+import type { Seat } from "@/types/seat";
 import {
   Modal,
   ModalContent,

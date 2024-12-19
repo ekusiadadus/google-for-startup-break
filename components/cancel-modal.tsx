@@ -1,4 +1,5 @@
 // components/CancelModal.tsx
+import { Seat } from "@/types/seat";
 import {
   Modal,
   ModalContent,
