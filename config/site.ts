@@ -16,4 +16,10 @@ export const siteConfig = {
     slack: "https://campustokyo.slack.com/archives/D05DAQXHQD6",
     sponsor: "https://patreon.com/ekusiadadus",
   },
+  navMenuItems: [
+    {
+      label: "Home",
+      href: "/room",
+    },
+  ],
 };
